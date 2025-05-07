@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const UsuarioSchema = new mongoose.Schema({
-  _id: Number, // <- tipo Number si estás usando IDs tipo 1, 2, 3
+  _id: Number,
   nombre: String,
   usuario: String,
   password: String,

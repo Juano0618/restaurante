@@ -13,18 +13,19 @@ app.use(express.json());
 
 // Rutas
 const mesaRoutes = require('./routes/mesas');
-const productoRoutes = require('./routes/productos');
-const pedidoRoutes = require('./routes/pedidos');
-const usuarioRoutes = require('./routes/usuarios');
+const productosRoutes = require('./routes/productos');
+const pedidosRoutes = require('./routes/pedidos');
+const usuariosRoutes = require('./routes/usuarios');
 
 app.use('/api/mesas', mesaRoutes);
-app.use('/api/productos', productoRoutes);
-app.use('/api/pedidos', pedidoRoutes);
-app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/productos', productosRoutes);
+app.use('/api/pedidos', pedidosRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
-console.log("🌐 Conectando a Mongo en:", process.env.MONGO_URI);
+
+console.log("Conectando a Mongo en:", process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ Conectado a MongoDB'))
-  .catch(err => console.error('❌ Error al conectar MongoDB:', err));
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch(err => console.error('Error al conectar MongoDB:', err));
 
 module.exports = app;

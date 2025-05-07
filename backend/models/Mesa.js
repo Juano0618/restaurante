@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const MesaSchema = new mongoose.Schema({
+  _id: Number,
   numero: {
     type: Number,
     required: true,
@@ -13,4 +14,4 @@ const MesaSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Mesa', MesaSchema);
+module.exports = mongoose.models.Mesa || mongoose.model('Mesa', MesaSchema);
