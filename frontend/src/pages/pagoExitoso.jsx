@@ -21,10 +21,10 @@ const PagoExitoso = () => {
         localStorage.removeItem('pedidoActual');
         localStorage.removeItem('mesaSeleccionada');
 
-        // Redirigir al home tras 7 segundos
+        // Redirigir al home tras 10 segundos
         setTimeout(() => {
           navigate('/');
-        }, 7000);
+        }, 10000);
       })
       .catch(err => {
         console.error('Error al liberar mesa:', err);
