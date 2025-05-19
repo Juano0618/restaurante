@@ -63,7 +63,7 @@ const VerPedido = () => {
       localStorage.removeItem('mesaSeleccionada');
 
       setEstadoPago('pagado');
-      alert('Pago completado. Redirigiendo al inicio...');
+      alert('Redirigiendo al sitio de pago...');
 
       setTimeout(() => {
         navigate('/');
