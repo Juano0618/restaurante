@@ -45,6 +45,7 @@ git clone https://github.com/usuario/restaurante-qr.git
 cd backend
 npm install
 ```
+## Dentro de la carpeta backend
 Crear un archivo `.env`:
 ```
 PORT=3001
@@ -61,6 +62,7 @@ npm run dev
 cd frontend
 npm install
 ```
+## Dentro de la carpeta frontend
 Crear un archivo `.env`:
 ```
 REACT_APP_API=http://localhost:3001
