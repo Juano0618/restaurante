@@ -139,6 +139,13 @@ const VerPedido = () => {
           >
             Pagar con tarjeta
           </button>
+
+          <button
+            onClick={() => navigate('/menu')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-semibold"
+>
+            Seguir pidiendo
+          </button>
         </div>
       </div>
     </div>

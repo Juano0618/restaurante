@@ -68,7 +68,20 @@ exports.crearPedido = async (req, res) => {
 // PUT actualizar pedido
 exports.actualizarPedido = async (req, res) => {
   try {
-    const actualizado = await Pedido.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { estado, metodoPago, pagado } = req.body;
+
+    const actualizaciones = {};
+
+    if (estado) actualizaciones.estado = estado;
+    if (typeof pagado === 'boolean') actualizaciones.pagado = pagado;
+    if (metodoPago) actualizaciones.metodoPago = metodoPago;
+
+    const actualizado = await Pedido.findByIdAndUpdate(
+      req.params.id,
+      { $set: actualizaciones },
+      { new: true }
+    );
+
     res.json(actualizado);
   } catch (error) {
     console.error('Error al actualizar el pedido:', error);

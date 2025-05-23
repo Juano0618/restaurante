@@ -6,7 +6,8 @@ import Menu from '../pages/Menu';
 import VerPedido from '../pages/verPedido';
 import PagoExitoso from '../pages/pagoExitoso';
 import VistaAdmin from '../pages/VistaAdmin';
-import VistaPersonal from '../pages/VistaPersonal';
+import VistaCocina from '../pages/VistaCocina';
+import VistaBar from '../pages/VistaBar';
 
 const AppRouter = () => {
   return (
@@ -17,8 +18,9 @@ const AppRouter = () => {
         <Route path="/menu" element={<Menu />} />
         <Route path="/ver-pedido" element={<VerPedido />} />
         <Route path="/pago-exitoso" element={<PagoExitoso />} />
-        <Route path="/personal" element={<VistaPersonal />} />
+        <Route path="/cocina" element={<VistaCocina />} />
         <Route path="/admin" element={<VistaAdmin />} />
+        <Route path="/bar" element={<VistaBar />} />
       </Routes>
     </Router>
   );

@@ -80,4 +80,20 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.get('/pedidos/del-dia', async (req, res) => {
+  const inicioDelDia = new Date();
+  inicioDelDia.setHours(0, 0, 0, 0); // inicio del día actual
+
+  try {
+    const pedidos = await Pedido.find({ fechaHora: { $gte: inicioDelDia } })
+      .populate('items.productoId') // importante para mostrar nombres y precios
+      .sort({ fechaHora: -1 });
+
+    res.json(pedidos);
+  } catch (err) {
+    console.error("Error al obtener pedidos del día:", err);
+    res.status(500).json({ error: 'Error al obtener pedidos del día' });
+  }
+});
+
 module.exports = router;

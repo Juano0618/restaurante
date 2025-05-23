@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { actualizarEstadoPedido } from '../utils/ApiPedidos'; // función centralizada
 
-const VistaPersonal = () => {
+
+const VistaCocina = () => {
   const [pedidosActivos, setPedidosActivos] = useState([]);
 
   const cargarPedidos = () => {
     axios.get(`${process.env.REACT_APP_API}/api/pedidos/activos`)
-      .then(res => setPedidosActivos(res.data))
-      .catch(err => console.error("Error al cargar pedidos activos:", err));
+      .then(res => {
+        const categoriasComida = ['para empezar', 'para compartir', 'sándwich', 'pizza'];
+
+        const pedidosCocina = res.data
+          .filter(p => p.estado !== 'esperando cuenta') // ocultar pedidos que piden la cuenta
+          .map(pedido => ({
+            ...pedido,
+            items: pedido.items.filter(item =>
+              categoriasComida.includes(item.productoId?.categoria?.toLowerCase())
+            )
+          }))
+          .filter(pedido => pedido.items.length > 0);
+
+        setPedidosActivos(pedidosCocina);
+      })
+      .catch(err => console.error("Error al cargar pedidos activos para la cocina:", err));
   };
 
   useEffect(() => {
     cargarPedidos();
-    const intervalo = setInterval(cargarPedidos, 10000);
+    const intervalo = setInterval(cargarPedidos, 2000);
     return () => clearInterval(intervalo);
   }, []);
 
@@ -24,9 +40,9 @@ const VistaPersonal = () => {
     return `Hace ${minutos} min`;
   };
 
-  const actualizarEstado = async (id, nuevoEstado) => {
+  const manejarCambioEstado = async (id, nuevoEstado) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API}/api/pedidos/${id}`, { estado: nuevoEstado });
+      await actualizarEstadoPedido(id, nuevoEstado);
       cargarPedidos();
     } catch (err) {
       console.error('Error al actualizar estado del pedido:', err);
@@ -42,7 +58,7 @@ const VistaPersonal = () => {
         backgroundPosition: 'center',
         backgroundSize: 'contain',
       }}>
-      <h1 className="text-3xl font-bold mb-6 text-center">Vista Personal</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Vista Cocina</h1>
 
       {pedidosActivos.length === 0 ? (
         <p className="text-center text-gray-400">No hay pedidos pendientes.</p>
@@ -51,11 +67,7 @@ const VistaPersonal = () => {
           {pedidosActivos.map((pedido) => (
             <div
               key={pedido._id}
-              className={`border rounded-lg p-4 shadow-md ${
-                pedido.estado === 'esperando cuenta'
-                  ? 'border-yellow-400 bg-yellow-900 bg-opacity-30'
-                  : 'border-white bg-white bg-opacity-10'
-              }`}
+              className="border border-white bg-white bg-opacity-10 rounded-lg p-4 shadow-md"
             >
               <h2 className="text-xl font-bold mb-2">Mesa {pedido.idMesa?.numero || pedido.idMesa}</h2>
               <p>Estado: <span className="font-semibold capitalize">{pedido.estado.replace('_', ' ')}</span></p>
@@ -66,7 +78,7 @@ const VistaPersonal = () => {
                 <ul className="text-sm list-disc list-inside">
                   {pedido.items.map((item, idx) => (
                     <li key={idx}>
-                      {item.productoId?.nombre || `Producto`} x{item.cantidad}
+                      {item.productoId?.nombre || 'Producto'} x{item.cantidad}
                     </li>
                   ))}
                 </ul>
@@ -76,7 +88,7 @@ const VistaPersonal = () => {
                 {pedido.estado === 'pendiente' && (
                   <button
                     className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white text-sm"
-                    onClick={() => actualizarEstado(pedido._id, 'en preparación')}
+                    onClick={() => manejarCambioEstado(pedido._id, 'en preparación')}
                   >
                     En preparación
                   </button>
@@ -84,17 +96,9 @@ const VistaPersonal = () => {
                 {(pedido.estado === 'pendiente' || pedido.estado === 'en preparación') && (
                   <button
                     className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white text-sm"
-                    onClick={() => actualizarEstado(pedido._id, 'listo_para_servir')}
+                    onClick={() => manejarCambioEstado(pedido._id, 'listo_para_servir')}
                   >
                     Listo
-                  </button>
-                )}
-                {pedido.estado === 'esperando cuenta' && (
-                  <button
-                    className="bg-yellow-500 hover:bg-yellow-600 px-3 py-1 rounded text-black text-sm"
-                    onClick={() => actualizarEstado(pedido._id, 'pagado')}
-                  >
-                    Cuenta entregada
                   </button>
                 )}
               </div>
@@ -106,5 +110,5 @@ const VistaPersonal = () => {
   );
 };
 
-export default VistaPersonal;
+export default VistaCocina;
 
